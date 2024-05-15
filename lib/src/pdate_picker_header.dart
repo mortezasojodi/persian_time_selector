@@ -92,7 +92,7 @@ class PDatePickerHeader extends StatelessWidget {
     final Color onPrimarySurfaceColor =
         isDark ? colorScheme.onSurface : colorScheme.onPrimary;
 
-    final TextStyle? helpStyle = textTheme.displaySmall?.copyWith(
+    final TextStyle? helpStyle = textTheme.titleSmall?.copyWith(
       color: onPrimarySurfaceColor,
     );
 
