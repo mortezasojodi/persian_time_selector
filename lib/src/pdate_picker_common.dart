@@ -60,10 +60,7 @@ class JalaliRange {
   /// Creates a date range for the given start and end [Jalali].
   ///
   /// [start] and [end] must be non-null.
-  const JalaliRange({
-    required this.start,
-    required this.end,
-  });
+  const JalaliRange({required this.start, required this.end});
 
   /// The start of the range of dates.
   final Jalali start;
@@ -83,7 +80,7 @@ class JalaliRange {
   }
 
   @override
-  int get hashCode => hashValues(start, end);
+  int get hashCode => Object.hash(start, end);
 
   @override
   String toString() => '$start - $end';

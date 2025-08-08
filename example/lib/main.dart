@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               builder: (context, child) {
                                 return Theme(
                                   data: ThemeData(
-                                    dialogTheme: const DialogTheme(
+                                    dialogTheme: DialogThemeData(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(0)),

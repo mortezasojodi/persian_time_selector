@@ -122,8 +122,9 @@ Future<JalaliRange?> showPersianDateRangePicker({
         !initialDateRange.start.isAfter(initialDateRange.end),
     "initialDateRange's start date must not be after it's end date.",
   );
-  initialDateRange =
-      initialDateRange == null ? null : utils.datesOnly(initialDateRange);
+  initialDateRange = initialDateRange == null
+      ? null
+      : utils.datesOnly(initialDateRange);
   assert(firstDate != null);
   firstDate = utils.dateOnly(firstDate);
   assert(lastDate != null);
@@ -173,10 +174,7 @@ Future<JalaliRange?> showPersianDateRangePicker({
   );
 
   if (textDirection != null) {
-    dialog = Directionality(
-      textDirection: textDirection,
-      child: dialog,
-    );
+    dialog = Directionality(textDirection: textDirection, child: dialog);
   }
 
   if (locale != null) {
@@ -347,7 +345,8 @@ class _DateRangePickerDialogState extends State<_DateRangePickerDialog> {
         size = mediaQuery.size;
         insetPadding = const EdgeInsets.all(0.0);
         shape = const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.zero));
+          borderRadius: BorderRadius.all(Radius.zero),
+        );
         elevation = 0;
         break;
 
@@ -394,12 +393,14 @@ class _DateRangePickerDialogState extends State<_DateRangePickerDialog> {
           cancelText: widget.cancelText ?? 'لغو',
           helpText: widget.helpText ?? 'انتخاب تاریخ',
         );
-        final DialogTheme dialogTheme = Theme.of(context).dialogTheme;
+        final DialogThemeData dialogTheme = Theme.of(context).dialogTheme;
         size = orientation == Orientation.portrait
             ? _inputPortraitDialogSize
             : _inputLandscapeDialogSize;
-        insetPadding =
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0);
+        insetPadding = const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 24.0,
+        );
         shape = dialogTheme.shape;
         elevation = dialogTheme.elevation ?? 24;
         break;
@@ -418,15 +419,17 @@ class _DateRangePickerDialogState extends State<_DateRangePickerDialog> {
         duration: _dialogSizeAnimationDuration,
         curve: Curves.easeIn,
         child: MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaleFactor: textScaleFactor,
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaleFactor: textScaleFactor),
+          child: Builder(
+            builder: (BuildContext context) {
+              return Directionality(
+                textDirection: TextDirection.rtl,
+                child: contents,
+              );
+            },
           ),
-          child: Builder(builder: (BuildContext context) {
-            return Directionality(
-              textDirection: TextDirection.rtl,
-              child: contents,
-            );
-          }),
         ),
       ),
     );
@@ -469,8 +472,9 @@ class _CalendarRangePickerDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+    final MaterialLocalizations localizations = MaterialLocalizations.of(
+      context,
+    );
     final Orientation orientation = MediaQuery.of(context).orientation;
     final TextTheme textTheme = theme.textTheme;
     final Color headerForeground = colorScheme.brightness == Brightness.light
@@ -478,20 +482,30 @@ class _CalendarRangePickerDialog extends StatelessWidget {
         : colorScheme.onSurface;
     final Color headerDisabledForeground = headerForeground.withOpacity(0.38);
     final String startDateText = utils.formatRangeStartDate(
-        localizations, selectedStartDate, selectedEndDate);
+      localizations,
+      selectedStartDate,
+      selectedEndDate,
+    );
     final String endDateText = utils.formatRangeEndDate(
-        localizations, selectedStartDate, selectedEndDate, Jalali.now());
+      localizations,
+      selectedStartDate,
+      selectedEndDate,
+      Jalali.now(),
+    );
     final TextStyle? headlineStyle = textTheme.titleMedium;
     final TextStyle? startDateStyle = headlineStyle?.apply(
-        color: selectedStartDate != null
-            ? headerForeground
-            : headerDisabledForeground);
+      color: selectedStartDate != null
+          ? headerForeground
+          : headerDisabledForeground,
+    );
     final TextStyle? endDateStyle = headlineStyle?.apply(
-        color: selectedEndDate != null
-            ? headerForeground
-            : headerDisabledForeground);
+      color: selectedEndDate != null
+          ? headerForeground
+          : headerDisabledForeground,
+    );
     final TextStyle saveButtonStyle = textTheme.bodySmall!.apply(
-        color: onConfirm != null ? headerForeground : headerDisabledForeground);
+      color: onConfirm != null ? headerForeground : headerDisabledForeground,
+    );
 
     final IconButton entryModeIcon = IconButton(
       padding: EdgeInsets.zero,
@@ -507,9 +521,7 @@ class _CalendarRangePickerDialog extends StatelessWidget {
       right: false,
       child: Scaffold(
         appBar: AppBar(
-          leading: CloseButton(
-            onPressed: onCancel,
-          ),
+          leading: CloseButton(onPressed: onCancel),
           actions: <Widget>[
             if (orientation == Orientation.landscape) entryModeIcon,
             ButtonTheme(
@@ -523,56 +535,56 @@ class _CalendarRangePickerDialog extends StatelessWidget {
           ],
           bottom: PreferredSize(
             preferredSize: const Size(double.infinity, 64),
-            child: Row(children: <Widget>[
-              SizedBox(
-                  width: MediaQuery.of(context).size.width < 360 ? 42 : 72),
-              Expanded(
-                child: Semantics(
-                  label: '$helpText $startDateText to $endDateText',
-                  excludeSemantics: true,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        helpText,
-                        style: textTheme.labelMedium!.apply(
-                          color: headerForeground,
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: MediaQuery.of(context).size.width < 360 ? 42 : 72,
+                ),
+                Expanded(
+                  child: Semantics(
+                    label: '$helpText $startDateText to $endDateText',
+                    excludeSemantics: true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          helpText,
+                          style: textTheme.labelMedium!.apply(
+                            color: headerForeground,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            startDateText,
-                            style: startDateStyle,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            ' – ',
-                            style: startDateStyle,
-                          ),
-                          Flexible(
-                            child: Text(
-                              endDateText,
-                              style: endDateStyle,
+                        const SizedBox(height: 8),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              startDateText,
+                              style: startDateStyle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                            Text(' – ', style: startDateStyle),
+                            Flexible(
+                              child: Text(
+                                endDateText,
+                                style: endDateStyle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              if (showEntryModeIcon && orientation == Orientation.portrait)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: entryModeIcon,
-                ),
-            ]),
+                if (showEntryModeIcon && orientation == Orientation.portrait)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: entryModeIcon,
+                  ),
+              ],
+            ),
           ),
         ),
         body: PCalendarDateRangePicker(
@@ -616,13 +628,25 @@ class _PInputDateRangePickerDialog extends StatelessWidget {
   final String helpText;
 
   String _formatDateRange(
-      BuildContext context, Jalali? start, Jalali? end, Jalali? now) {
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
-    final String startText =
-        utils.formatRangeStartDate(localizations, start, end);
-    final String endText =
-        utils.formatRangeEndDate(localizations, start, end, now);
+    BuildContext context,
+    Jalali? start,
+    Jalali? end,
+    Jalali? now,
+  ) {
+    final MaterialLocalizations localizations = MaterialLocalizations.of(
+      context,
+    );
+    final String startText = utils.formatRangeStartDate(
+      localizations,
+      start,
+      end,
+    );
+    final String endText = utils.formatRangeEndDate(
+      localizations,
+      start,
+      end,
+      now,
+    );
     if (start == null || end == null) {
       return localizations.unspecifiedDateRange;
     }
@@ -647,9 +671,13 @@ class _PInputDateRangePickerDialog extends StatelessWidget {
         ? textTheme.titleMedium?.apply(color: dateColor)
         : textTheme.labelMedium?.apply(color: dateColor);
     final String dateText = _formatDateRange(
-        context, selectedStartDate, selectedEndDate, currentDate);
-    final String semanticDateText = selectedStartDate != null &&
-            selectedEndDate != null
+      context,
+      selectedStartDate,
+      selectedEndDate,
+      currentDate,
+    );
+    final String semanticDateText =
+        selectedStartDate != null && selectedEndDate != null
         ? '${selectedStartDate!.formatMediumDate()} – ${selectedEndDate!.formatMediumDate()}'
         : '';
 
@@ -672,14 +700,8 @@ class _PInputDateRangePickerDialog extends StatelessWidget {
       child: OverflowBar(
         spacing: 8,
         children: <Widget>[
-          TextButton(
-            onPressed: onCancel,
-            child: Text(cancelText),
-          ),
-          TextButton(
-            onPressed: onConfirm,
-            child: Text(confirmText),
-          ),
+          TextButton(onPressed: onCancel, child: Text(cancelText)),
+          TextButton(onPressed: onConfirm, child: Text(confirmText)),
         ],
       ),
     );

@@ -100,14 +100,22 @@ Future<Jalali?> showPersianDatePicker({
   initialDate = utils.dateOnly(initialDate);
   firstDate = utils.dateOnly(firstDate);
   lastDate = utils.dateOnly(lastDate);
-  assert(!lastDate.isBefore(firstDate),
-      'lastDate $lastDate must be on or after firstDate $firstDate.');
-  assert(!initialDate.isBefore(firstDate),
-      'initialDate $initialDate must be on or after firstDate $firstDate.');
-  assert(!initialDate.isAfter(lastDate),
-      'initialDate $initialDate must be on or before lastDate $lastDate.');
-  assert(selectableDayPredicate == null || selectableDayPredicate(initialDate),
-      'Provided initialDate $initialDate must satisfy provided selectableDayPredicate.');
+  assert(
+    !lastDate.isBefore(firstDate),
+    'lastDate $lastDate must be on or after firstDate $firstDate.',
+  );
+  assert(
+    !initialDate.isBefore(firstDate),
+    'initialDate $initialDate must be on or after firstDate $firstDate.',
+  );
+  assert(
+    !initialDate.isAfter(lastDate),
+    'initialDate $initialDate must be on or before lastDate $lastDate.',
+  );
+  assert(
+    selectableDayPredicate == null || selectableDayPredicate(initialDate),
+    'Provided initialDate $initialDate must satisfy provided selectableDayPredicate.',
+  );
   assert(debugCheckHasMaterialLocalizations(context));
 
   Widget dialog = _DatePickerDialog(
@@ -127,10 +135,7 @@ Future<Jalali?> showPersianDatePicker({
   );
 
   if (textDirection != null) {
-    dialog = Directionality(
-      textDirection: textDirection,
-      child: dialog,
-    );
+    dialog = Directionality(textDirection: textDirection, child: dialog);
   }
 
   if (locale != null) {
@@ -167,20 +172,27 @@ class _DatePickerDialog extends StatefulWidget {
     this.errorInvalidText,
     this.fieldHintText,
     this.fieldLabelText,
-  })  : initialDate = utils.dateOnly(initialDate),
-        firstDate = utils.dateOnly(firstDate),
-        lastDate = utils.dateOnly(lastDate),
-        super(key: key) {
-    assert(!this.lastDate.isBefore(this.firstDate),
-        'lastDate ${this.lastDate} must be on or after firstDate ${this.firstDate}.');
-    assert(!this.initialDate.isBefore(this.firstDate),
-        'initialDate ${this.initialDate} must be on or after firstDate ${this.firstDate}.');
-    assert(!this.initialDate.isAfter(this.lastDate),
-        'initialDate ${this.initialDate} must be on or before lastDate ${this.lastDate}.');
+  }) : initialDate = utils.dateOnly(initialDate),
+       firstDate = utils.dateOnly(firstDate),
+       lastDate = utils.dateOnly(lastDate),
+       super(key: key) {
     assert(
-        selectableDayPredicate == null ||
-            selectableDayPredicate!(this.initialDate),
-        'Provided initialDate ${this.initialDate} must satisfy provided selectableDayPredicate');
+      !this.lastDate.isBefore(this.firstDate),
+      'lastDate ${this.lastDate} must be on or after firstDate ${this.firstDate}.',
+    );
+    assert(
+      !this.initialDate.isBefore(this.firstDate),
+      'initialDate ${this.initialDate} must be on or after firstDate ${this.firstDate}.',
+    );
+    assert(
+      !this.initialDate.isAfter(this.lastDate),
+      'initialDate ${this.initialDate} must be on or before lastDate ${this.lastDate}.',
+    );
+    assert(
+      selectableDayPredicate == null ||
+          selectableDayPredicate!(this.initialDate),
+      'Provided initialDate ${this.initialDate} must satisfy provided selectableDayPredicate',
+    );
   }
 
   /// The initially selected [Jalali] that the picker should display.
@@ -311,8 +323,10 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
     final TextTheme textTheme = theme.textTheme;
     // Constrain the textScaleFactor to the largest supported value to prevent
     // layout issues.
-    final double textScaleFactor =
-        math.min(MediaQuery.of(context).textScaleFactor, 1.3);
+    final double textScaleFactor = math.min(
+      MediaQuery.of(context).textScaleFactor,
+      1.3,
+    );
 
     final String dateText = _selectedDate != null
         ? _selectedDate!.formatMediumDate()
@@ -426,16 +440,20 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
     );
 
     final Size dialogSize = _dialogSize(context)! * textScaleFactor;
-    final DialogTheme dialogTheme = Theme.of(context).dialogTheme;
+    final DialogThemeData dialogTheme = Theme.of(context).dialogTheme;
     return Dialog(
-      insetPadding:
-          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 24.0,
+      ),
       // The default dialog shape is radius 2 rounded rect, but the spec has
       // been updated to 4, so we will use that here for the Date Picker, but
       // only if there isn't one provided in the theme.
-      shape: dialogTheme.shape ??
+      shape:
+          dialogTheme.shape ??
           const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4.0))),
+            borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          ),
       clipBehavior: Clip.antiAlias,
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -445,41 +463,43 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
           duration: _dialogSizeAnimationDuration,
           curve: Curves.easeIn,
           child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaleFactor: textScaleFactor,
-            ),
-            child: Builder(builder: (BuildContext context) {
-              switch (orientation) {
-                case Orientation.portrait:
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      header,
-                      Expanded(child: picker),
-                      actions,
-                    ],
-                  );
-                case Orientation.landscape:
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      header,
-                      Flexible(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Expanded(child: picker),
-                            actions,
-                          ],
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaleFactor: textScaleFactor),
+            child: Builder(
+              builder: (BuildContext context) {
+                switch (orientation) {
+                  case Orientation.portrait:
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        header,
+                        Expanded(child: picker),
+                        actions,
+                      ],
+                    );
+                  case Orientation.landscape:
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        header,
+                        Flexible(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Expanded(child: picker),
+                              actions,
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-              }
-            }),
+                      ],
+                    );
+                }
+              },
+            ),
           ),
         ),
       ),
